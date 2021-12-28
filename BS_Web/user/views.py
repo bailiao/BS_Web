@@ -9,9 +9,15 @@ import uuid
 import random
 import datetime
 import pytz
-
-
 from . import models
+
+ 
+def runoob(request):
+    context = {}
+    context['hello'] = 'Hello World!'
+    return render(request, 'hello.html', context)
+
+
 # Create your views here.
 def register(request):
     data = json.loads(request.body)
