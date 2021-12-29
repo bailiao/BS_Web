@@ -14,8 +14,11 @@ from . import models
  
 def runoob(request):
     context = {}
+    data = json.loads(request.body)
+    # data = request.body
+    print(data)
     context['hello'] = 'Hello World!'
-    return render(request, 'hello.html', context)
+    return HttpResponse("response")
 
 
 # Create your views here.
