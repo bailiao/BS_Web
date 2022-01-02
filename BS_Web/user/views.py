@@ -101,7 +101,7 @@ def findPassword(request):
         return HttpResponse("邮箱未注册")
 
 
-def Verifycode(request):
+def verifyCode(request):
     data = json.loads(request.body)
     Email = data['Email']
     Newpassword =data['Newpassword']
@@ -137,6 +137,9 @@ def Verifycode(request):
             return HttpResponse("邮箱无验证码")
     else:
         return HttpResponse("邮箱未注册")
+
+
+
 
 
 # def addFavor(request):
