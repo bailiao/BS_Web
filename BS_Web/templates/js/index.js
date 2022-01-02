@@ -1,4 +1,12 @@
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+import { create } from 'ipfs-http-client'
+const ipfs = create({host: 'localhost', port: '5001', protocol: 'http'});
+// const ipfsAPI = require('ipfs-api');
+// const ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'});
+
 const server = "http://127.0.0.1:8000";
+
 $(function(){
     //模态框显示
     $("#log_in_out").on("click", function() {
@@ -58,13 +66,13 @@ $(function(){
 
     $("#register_modal").find(".modal-footer").find("button").on("click", function(){
         let data = {};
-        let value = $('#login_modal').find("form").serializeArray();
+        let value = $('#register_modal').find("form").serializeArray();
         $.each(value, function (index, item) {
             console.log(item.name);
             data[item.name] = item.value;
         });
         console.log(JSON.stringify(data));
-        $.post(`${server}/runoob/`, JSON.stringify(data), function(data) {
+        $.post(`${server}/register/`, JSON.stringify(data), function(data) {
             $("#login_modal").modal('hide');
             if(data) {
                 alert("注册成功");
@@ -78,7 +86,7 @@ $(function(){
 
     $("#findpasswd_modal").find(".modal-footer").find("button").on("click", function(){
         let data = {};
-        let value = $('#login_modal').find("form").serializeArray();
+        let value = $('#findpasswd_modal').find("form").serializeArray();
         $.each(value, function (index, item) {
             console.log(item.name);
             data[item.name] = item.value;

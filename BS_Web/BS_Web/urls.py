@@ -20,4 +20,7 @@ from user import views as user_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('runoob/', user_view.runoob),
+    path('register/', user_view.register),
+    path('login/', user_view.login),
+    path('findpasswd/', user_view.findPassword),
 ]

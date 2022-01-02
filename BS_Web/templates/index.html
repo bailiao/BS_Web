@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="css/myCss.css">
     <script src="js/jquery-3.6.0.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/index.js"></script>
+    <script src="js/index.js" type="module"></script>
+    <!-- <script src="https://unpkg.com/ipfs-http-client/dist/index.min.js" crossorigin="anonymous"></script> -->
 </head>
 
 <body>
@@ -68,6 +69,11 @@
         </div><!-- /.container-fluid -->
       </nav>
 
+      <input type="file" multiple="multiple" name="task_Image" class="form-control" id="task_Image" required="required">
+      <button type="button" class="btn btn-default" data-dismiss="modal" id="get_task">领取任务</button>
+      
+
+      <!-- 各种模态框 -->
       <!-- 登录模态框 -->
       <div class="modal fade" tabindex="-1" role="dialog" id="login_modal">
         <div class="modal-dialog" role="document">
@@ -79,12 +85,12 @@
             <div class="modal-body">
               <form id="login">
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Email address</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="Email">
+                  <label for="login_Email">Email address</label>
+                  <input type="email" class="form-control" id="login_Email" placeholder="Email" name="Email">
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="Passwd">
+                  <label for="login_passwd">Password</label>
+                  <input type="password" class="form-control" id="login_passwd" placeholder="Password" name="Password">
                 </div>
               </form>
               <div class="link">
@@ -111,12 +117,16 @@
             <div class="modal-body">
               <form id="register">
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Email address</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                  <label for="register_Email">Email address</label>
+                  <input type="email" class="form-control" id="register_Email" placeholder="Email" name="Email">
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  <label for="register_Name">Name</label>
+                  <input type="text" class="form-control" id="register_Name" placeholder="Email" name="Email">
+                </div>
+                <div class="form-group">
+                  <label for="register_passwd">Password</label>
+                  <input type="password" class="form-control" id="register_passwd" placeholder="Password" name="Password">
                 </div>
               </form>
               <div class="link">
@@ -124,7 +134,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <!-- <button type="button" class="btn btn-primary">sign in</button> -->
+              <button type="button" class="btn btn-primary">注册</button>
               <!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> -->
             </div>
           </div><!-- /.modal-content -->
@@ -142,17 +152,17 @@
             <div class="modal-body">
               <form id="findpasswd">
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Email address</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                  <label for="find_Email">Email address</label>
+                  <input type="text" class="form-control" id="find_Email" placeholder="Email" name="Email">
                   <button>发送验证码</button>
                 </div>
                 <div class="form-group">
                   <label for="Identitycode">Password</label>
-                  <input type="text" class="form-control" id="Identitycode">
+                  <input type="text" class="form-control" id="Identitycode" name="Checksum">
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  <label for="find_passwd">Password</label>
+                  <input type="password" class="form-control" id="find_passwd" placeholder="Password" name="Password">
                 </div>
               </form>
               <div class="link">
