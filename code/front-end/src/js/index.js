@@ -22,10 +22,11 @@ $(function(){
         var IsLogin = checkIdentify();
         console.log(IsLogin);
         if(IsLogin) {
-            $(this).text("Logout");
+            // $(this).text("Logout");
+            clearCookie("UID");
         }
         else {
-            var login_modal = $("#login_modal")
+            var login_modal = $("#login_modal");
             login_modal.modal();
         }
     })
@@ -69,6 +70,7 @@ $(function(){
             $("#login_modal").modal('hide');
             if(res) {
                 setCookie("UID", data['Email'], 1);
+                $("#log_in_out").text("Logout")
                 alert("登录成功");
             }else {
                 alert("登录失败！")
@@ -131,6 +133,7 @@ $(function(){
         }else if($(this).prop("name") == "IsVideo") {
             // alert("video");
             type = "video"
+            console.log($(".videoinput"));
             $(".videoinput").show();
             $(".imageinput").hide();
         }else{
@@ -151,11 +154,11 @@ $(function(){
         });
         console.log(JSON.stringify(data));
         if("image" == type) {
-            var len = $("#file_select").get(0).files.length;
+            var len = $(".imageinput").get(0).files.length;
             console.log(len);
             var path = new Array();
             for(var i = 0; i < len; i++) {
-                const file = $("#file_select").get(0).files[i];
+                const file = $(".imageinput").get(0).files[i];
                 let reader = new FileReader();
                 reader.readAsArrayBuffer(file);
                 // console.log(reader);
@@ -173,7 +176,7 @@ $(function(){
             data['Path'] = path;
             console.log(data);
             // $.post(`${server}/uploadTask/`, JSON.stringify(data), function(data) {
-            //     $("#login_modal").modal('hide');
+            //     $("#upload_modal").modal('hide');
             //     if(data) {
             //         alert("上传成功");
             //     }else {
@@ -183,19 +186,46 @@ $(function(){
                 
             // });
         }else if("video" == type) {
-            data['Email'] = getCookie("UID");
-            data['Path'] = path;
             console.log(data);
-            
-            // $.post(`${server}/uploadTask/`, JSON.stringify(data), function(data) {
-            //     $("#login_modal").modal('hide');
-            //     if(data) {
+            var formData = new FormData();
+            console.log($(".videoinput").get(0).files[0].name);
+            formData.append($(".videoinput").get(0).files[0].name, $(".videoinput").get(0).files[0]);
+            // formData.append("Email", getCookie("UID"));
+            // formData.append("Name", data['Name']);
+            // formData.append("Description", data['Description']);
+            console.log(formData);
+            $.ajax({
+                type:'post',
+                url:`${server}/processVideo/`,
+        		data: formData,
+        		contentType : false, 
+				processData : false,
+        		success : function(res) {
+        			console.log(res);
+                    var path = saveImageOnIpfs(res)
+					data['Email'] = getCookie("UID");
+                    data['Path'] = res;
+                    console.log(data);
+
+                    $.post(`${server}/uploadTask/`, JSON.stringify(data), function(data) {
+                        $("#upload_modal").modal('hide');
+                        if(data) {
+                            alert("上传成功");
+                        }else {
+                            alert("上传失败！")
+                        }
+
+                        
+                    });
+				}
+            })
+            // $.post(`${server}/processVideo/`, formData, function(res) {
+            //     $("#upload_modal").modal('hide');
+            //     if(res) {
             //         alert("上传成功");
             //     }else {
             //         alert("上传失败！")
             //     }
-
-                
             // });
         }
     })
@@ -215,6 +245,11 @@ $(function(){
     // }   
   
     /* 获取图片上传到IPFS */
+
+    $("#test").on("click", function() {
+        var path = ["D:/django/BS_Web/Image/rubia.mp40.0.jpg", "D:/django/BS_Web/Image/rubia.mp41.0.jpg", "D:/django/BS_Web/Image/rubia.mp42.0.jpg", "D:/django/BS_Web/Image/rubia.mp43.0.jpg", "D:/django/BS_Web/Image/rubia.mp44.0.jpg", "D:/django/BS_Web/Image/rubia.mp45.0.jpg", "D:/django/BS_Web/Image/rubia.mp46.0.jpg"];
+        saveImageOnIpfs(path);
+    })
 
  });
 
@@ -239,7 +274,7 @@ function getCookie(c_name) {
     return ""//不存在就返回空
 }
 
-//检查是否已登录和登录者的身份
+//检查是否已登录和登录者ID
 function checkIdentify() {
     var UID = getCookie("UID");
     if(UID == null || UID == "") {    //如果用户还未登录，那么返回登录界面
@@ -247,4 +282,33 @@ function checkIdentify() {
     } else {
         return true;
     }
+}
+
+//删除登录用户的cookie
+function clearCookie(name) { 
+
+    setCookie(name, "", -1); 
+
+} 
+
+function saveImageOnIpfs(file_list) {
+    var len = file_list.length;
+    console.log(len);
+    var path = new Array();
+    for(var i = 0; i < len; i++) {
+        const file = file_list[i];
+        let reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        // console.log(reader);
+        reader.onload = function() {
+            console.log(reader.result);
+            let buffer = Buffer.from(reader.result);
+            ipfs.add(buffer).then(res=>{
+                console.log("res: ", res.path);
+                path.push(res.path);
+            })
+        }
+        
+    }
+    return path;
 }

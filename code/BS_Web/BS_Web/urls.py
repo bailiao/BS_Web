@@ -25,4 +25,5 @@ urlpatterns = [
     path('login/', user_view.login),
     path('findpasswd/', user_view.findPassword),
     path('uploadTask/', task_view.createTask),
+    path('processVideo/', task_view.processVideo),
 ]
