@@ -11,7 +11,9 @@ require("../css/myCss.css");
 // import '../css/bootstrap.css';  //  引入 Bootstrap 的 css
 // import '../css/myCss.css'
 import { Buffer } from 'buffer';
-var ipfs = window.IpfsApi('localhost', '5001', {protocol: 'http'})
+import { create } from 'ipfs-http-client'
+const ipfs = create({host: 'localhost', port: '5001', protocol: 'http'});
+// var ipfs = window.IpfsApi('localhost', '5001', {protocol: 'http'})
 const server = "http://127.0.0.1:8000";
 
 $(function(){
@@ -116,6 +118,25 @@ $(function(){
         // });
     })
     /* 获取表单数据并提交至后端 */
+    var modalBox = $("#upload_modal input:checkbox");
+    var type = "image";
+    modalBox.on("click", function() {
+        $(this).prop("checked", true);
+        $(this).siblings().prop("checked", false);
+        if($(this).prop("name") == "IsImage") {
+            // alert("image");
+            type = "image";
+            $(".imageinput").show();
+            $(".videoinput").hide();
+        }else if($(this).prop("name") == "IsVideo") {
+            // alert("video");
+            type = "video"
+            $(".videoinput").show();
+            $(".imageinput").hide();
+        }else{
+            console.log($(this).prop);
+        }
+    })
 
     /* 获取图片上传到IPFS */
     $("#upload_modal").find(".modal-footer").find("button").on("click", function(){
@@ -129,41 +150,70 @@ $(function(){
             data[item.name] = item.value;
         });
         console.log(JSON.stringify(data));
-        // console.log($("#file_select").get(0).files);
-        var len = $("#file_select").get(0).files.length;
-        var path = new Array();
-        for(var i = 0; i < len; i++) {
-            const file = $("#file_select").get(0).files[i];
-            // const files = [{
-            //     //path: '/tmp/a.png',
-            //     path: 'a.png',
-            //     content: file
+        if("image" == type) {
+            var len = $("#file_select").get(0).files.length;
+            console.log(len);
+            var path = new Array();
+            for(var i = 0; i < len; i++) {
+                const file = $("#file_select").get(0).files[i];
+                let reader = new FileReader();
+                reader.readAsArrayBuffer(file);
+                // console.log(reader);
+                reader.onload = function() {
+                    console.log(reader.result);
+                    let buffer = Buffer.from(reader.result);
+                    ipfs.add(buffer).then(res=>{
+                        console.log("res: ", res.path);
+                        path.push(res.path);
+                    })
+                }
+                
+            }
+            data['Email'] = getCookie("UID");
+            data['Path'] = path;
+            console.log(data);
+            // $.post(`${server}/uploadTask/`, JSON.stringify(data), function(data) {
+            //     $("#login_modal").modal('hide');
+            //     if(data) {
+            //         alert("上传成功");
+            //     }else {
+            //         alert("上传失败！")
+            //     }
 
-            // }]
-            var reader = new FileReader();
-            reader.readAsArrayBuffer(file);
-            console.log(reader);
-            let buffer = Buffer.from(reader.result);
-            ipfs.add(buffer).then(res=>{
-                console.log("res: ", res.path);
-                path.push(res.path);
-            })
-        }
-        // let Email = getCookie("UID");
-        data['Email'] = getCookie("UID");
-        data['Path'] = path;
-        console.log(data);
-        // $.post(`${server}/uploadTask/`, JSON.stringify(data), function(data) {
-        //     $("#login_modal").modal('hide');
-        //     if(data) {
-        //         alert("上传成功");
-        //     }else {
-        //         alert("上传失败！")
-        //     }
-
+                
+            // });
+        }else if("video" == type) {
+            data['Email'] = getCookie("UID");
+            data['Path'] = path;
+            console.log(data);
             
-        // });
+            // $.post(`${server}/uploadTask/`, JSON.stringify(data), function(data) {
+            //     $("#login_modal").modal('hide');
+            //     if(data) {
+            //         alert("上传成功");
+            //     }else {
+            //         alert("上传失败！")
+            //     }
+
+                
+            // });
+        }
     })
+
+    
+    // let saveImageOnIpfs = (reader) => {
+    //     return new Promise(function(resolve, reject) {
+    //         const buffer = Buffer.from(reader.result);
+    //         ipfs.add(buffer).then((response) => {
+    //             console.log(response)
+    //             resolve(response[0].hash);
+    //         }).catch((err) => {
+    //             console.error(err)
+    //             reject(err);
+    //         })
+    //     })
+    // }   
+  
     /* 获取图片上传到IPFS */
 
  });
