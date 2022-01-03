@@ -14,7 +14,6 @@ import os
 import urllib
 import ipfsApi
 
-from code.BS_Web.user.models import User
 ipfs = ipfsApi.Client('127.0.0.1', 5001)
 from . import models
 
