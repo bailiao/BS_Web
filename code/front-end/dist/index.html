@@ -11,7 +11,7 @@
     <script src="../src/js/bootstrap.min.js"></script> -->
     <script src="https://unpkg.com/ipfs-api/dist/index.js"></script>
     <!-- <script src="./index.js" type="module"></script> -->
-<script defer src="js/index.js"></script><link href="style.css" rel="stylesheet"></head>
+<script defer src="js/index.js"></script></head>
 
 <body>
     <!-- 主页面 -->
@@ -69,9 +69,9 @@
         </div><!-- /.container-fluid -->
       </nav>
 
-      <button type="button" class="btn btn-default" data-dismiss="modal" id="upload_task">上传任务</button>
-      <button type="button" class="btn btn-default" data-dismiss="modal" id="get_task">领取任务</button>
-      
+      <button type="button" class="btn btn-default" id="upload_task">上传任务</button>
+      <button type="button" class="btn btn-default" id="get_task">领取任务</button>
+      <button type="button" class="btn btn-default" id="test">测试</button>
 
       <!-- 各种模态框 -->
       <!-- 登录模态框 -->
@@ -192,8 +192,15 @@
                   <input type="text" class="form-control" id="task_name" placeholder="Name" name="Name">
                 </div>
                 <div class="form-group">
+                  <label for="file_type">Image</label>
+                  <input type="checkbox" id="IsImage" name="IsImage">
+                  <label for="file_type">Video</label>
+                  <input type="checkbox" id="IsVideo" name="IsVideo">
+                </div>
+                <div class="form-group">
                   <label for="file_select">Select File</label>
-                  <input type="file" multiple="multiple" name="file_select" class="form-control" id="file_select" required="required">
+                  <input type="file" multiple="multiple" accept="image/*" name="file_select" class="form-control imageinput" id="file_select" required="required">
+                  <input type="file" accept="video/*" name="file_select" class="form-control videoinput" id="file_select" required="required" style="display: none;">
                 </div>
                 <div class="form-group">
                   <label for="Description">Description</label>

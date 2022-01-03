@@ -90,3 +90,24 @@ def createVideoTask(request):
         image.Task.add(task)
 
     return HttpResponse("上传成功")
+
+def getAllTask(request):
+    list1=[]
+    
+    taskList = models.Task.objects.all()
+    for task in taskList:
+        taskItem={}
+        taskItem['TID']=task.TID
+        taskItem['Name']=task.Name
+        taskItem['State']=task.State
+        taskItem['Description']=task.Description
+        taskItem['CreatedTime']=task.CreatedTime
+        user = list(models.User.objects.values('Email').filter(UID=task.User))
+        taskItem['Publisher']=user[0]['Email']
+
+        list1.append(taskItem)
+
+    return HttpResponse(json.dumps(list1))
+
+        
+

@@ -45,6 +45,7 @@ module.exports = {
     mode: 'development',
     entry: {
         index:"./src/js/index.js",
+        task:"./src/js/task.js",
     },
     output: {
         filename: "js/[name].js",
@@ -55,17 +56,18 @@ module.exports = {
             {
                 //处理css资源
                 test: /\.css$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                          publicPath: './dist',
-                        },
-                    },
-                    {
-                        loader: 'css-loader',
-                    },
-                ]
+                use:["style-loader","css-loader"],
+                // use: [
+                //     // {
+                //     //     loader: MiniCssExtractPlugin.loader,
+                //     //     options: {
+                //     //       publicPath: './dist',
+                //     //     },
+                //     // },
+                //     // {
+                //     //     loader: 'css-loader',
+                //     // },
+                // ]
             },
             // {
             //     test: /\.js$/,
@@ -91,10 +93,17 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: './src/html/index.html',
+            filename: 'index.html',
+            chunks: ['index']
         }),
-        new MiniCssExtractPlugin({
-            filename: 'style.css',
+        new HtmlWebpackPlugin({
+            template: './src/html/taskList.html',
+            filename: 'taskList.html',
+            chunks: ['task']
         }),
+        // new MiniCssExtractPlugin({
+        //     filename: 'style.css',
+        // }),
 
     ],
     //   devServer: { contentBase: path.join(__dirname, "dist"), compress: true },

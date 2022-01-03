@@ -245,6 +245,12 @@ $(function(){
     // }   
   
     /* 获取图片上传到IPFS */
+    /* 获取表单数据并提交至后端 */
+
+    /* 跳转网页 */
+    $("#get_task").on("click", function(){
+        $(location).prop('href', './taskList.html');
+    })
 
     $("#test").on("click", function() {
         var path = ["D:/django/BS_Web/Image/rubia.mp40.0.jpg", "D:/django/BS_Web/Image/rubia.mp41.0.jpg", "D:/django/BS_Web/Image/rubia.mp42.0.jpg", "D:/django/BS_Web/Image/rubia.mp43.0.jpg", "D:/django/BS_Web/Image/rubia.mp44.0.jpg", "D:/django/BS_Web/Image/rubia.mp45.0.jpg", "D:/django/BS_Web/Image/rubia.mp46.0.jpg"];

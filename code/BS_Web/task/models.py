@@ -12,3 +12,8 @@ class Task(models.Model):
 class Image(models.Model):
     Task = models.ManyToManyField(Task)
     Ipfs_hash = models.CharField(max_length=70)
+
+class getTask(models.Model):
+    Task = models.ManyToManyField(Task)
+    Publisher = models.ManyToManyField(User,related_name="Publisher")
+    Obtainer = models.ManyToManyField(User,related_name="Obtainer")
