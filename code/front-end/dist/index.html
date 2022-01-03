@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="../src/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../src/css/myCss.css">
+    <script src="../src/js/jquery-3.6.0.js"></script>
+    <script src="../src/js/bootstrap.min.js"></script> -->
+    <script src="https://unpkg.com/ipfs-api/dist/index.js"></script>
+    <!-- <script src="./index.js" type="module"></script> -->
+<script defer src="js/index.js"></script><link href="style.css" rel="stylesheet"></head>
+
+<body>
+    <!-- 主页面 -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">BS</a>
+          </div>
+      
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+              <li><a href="#">Link</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+            <form class="navbar-form navbar-left">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search">
+              </div>
+              <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+              <li ><a href="#" id="log_in_out">Login</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">个人中心<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">修改密码</a></li>
+                  <li><a href="#">我的任务</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
+
+      <button type="button" class="btn btn-default" data-dismiss="modal" id="upload_task">上传任务</button>
+      <button type="button" class="btn btn-default" data-dismiss="modal" id="get_task">领取任务</button>
+      
+
+      <!-- 各种模态框 -->
+      <!-- 登录模态框 -->
+      <div class="modal fade" tabindex="-1" role="dialog" id="login_modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+              <form id="login">
+                <div class="form-group">
+                  <label for="login_Email">Email address</label>
+                  <input type="email" class="form-control" id="login_Email" placeholder="Email" name="Email">
+                </div>
+                <div class="form-group">
+                  <label for="login_passwd">Password</label>
+                  <input type="password" class="form-control" id="login_passwd" placeholder="Password" name="Password">
+                </div>
+              </form>
+              <div class="link">
+                <a id="forget_passwd" >Forgert password?</a>
+                <a id="register_link" style="float: right;">Don't have an account? Sign Up</a>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">sign in</button>
+              <!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> -->
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <!-- 注册模态框 -->
+      <div class="modal fade" tabindex="-1" role="dialog" id="register_modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Regitser</h4>
+            </div>
+            <div class="modal-body">
+              <form id="register">
+                <div class="form-group">
+                  <label for="register_Email">Email address</label>
+                  <input type="email" class="form-control" id="register_Email" placeholder="Email" name="Email">
+                </div>
+                <div class="form-group">
+                  <label for="register_Name">Name</label>
+                  <input type="text" class="form-control" id="register_Name" placeholder="Email" name="Email">
+                </div>
+                <div class="form-group">
+                  <label for="register_passwd">Password</label>
+                  <input type="password" class="form-control" id="register_passwd" placeholder="Password" name="Password">
+                </div>
+              </form>
+              <div class="link">
+                <a id="return">Already have an account? Sign In</a>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">注册</button>
+              <!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> -->
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <!-- 找回密码模态框 -->
+      <div class="modal fade" tabindex="-1" role="dialog" id="findpasswd_modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Find</h4>
+            </div>
+            <div class="modal-body">
+              <form id="findpasswd">
+                <div class="form-group">
+                  <label for="find_Email">Email address</label>
+                  <input type="text" class="form-control" id="find_Email" placeholder="Email" name="Email">
+                  <button>发送验证码</button>
+                </div>
+                <div class="form-group">
+                  <label for="Identitycode">Identitycode</label>
+                  <input type="text" class="form-control" id="Identitycode" name="Checksum">
+                </div>
+                <div class="form-group">
+                  <label for="find_passwd">Password</label>
+                  <input type="password" class="form-control" id="find_passwd" placeholder="Password" name="Password">
+                </div>
+              </form>
+              <div class="link">
+                <a>Already have an account? Sign In</a>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">confirm</button>
+              <!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> -->
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <!-- 上传任务模态框 -->
+      <div class="modal fade" tabindex="-1" role="dialog" id="upload_modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Upload</h4>
+            </div>
+            <div class="modal-body">
+              <form >
+                <div class="form-group">
+                  <label for="task_name">Task Name</label>
+                  <input type="text" class="form-control" id="task_name" placeholder="Name" name="Name">
+                </div>
+                <div class="form-group">
+                  <label for="file_select">Select File</label>
+                  <input type="file" multiple="multiple" name="file_select" class="form-control" id="file_select" required="required">
+                </div>
+                <div class="form-group">
+                  <label for="Description">Description</label>
+                  <input type="text" class="form-control" id="Description" placeholder="Description" name="Description">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">submit</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+</body>
+</html>
