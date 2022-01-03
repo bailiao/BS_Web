@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/myCss.css">
-    <script src="js/jquery-3.6.0.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/myCss.css">
+    <script src="../js/jquery-3.6.0.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/ipfs-api/dist/index.js"></script>
-    <script src="js/index.js" type="module"></script>
+    <script src="../js/index.js" type="module"></script>
 </head>
 
 <body>
@@ -69,7 +69,7 @@
         </div><!-- /.container-fluid -->
       </nav>
 
-      <input type="file" webkitdirectory='true' multiple="multiple" name="task_Image" class="form-control" id="task_Image" required="required">
+      <button type="button" class="btn btn-default" data-dismiss="modal" id="upload_task">上传任务</button>
       <button type="button" class="btn btn-default" data-dismiss="modal" id="get_task">领取任务</button>
       
 
@@ -157,7 +157,7 @@
                   <button>发送验证码</button>
                 </div>
                 <div class="form-group">
-                  <label for="Identitycode">Password</label>
+                  <label for="Identitycode">Identitycode</label>
                   <input type="text" class="form-control" id="Identitycode" name="Checksum">
                 </div>
                 <div class="form-group">
@@ -170,8 +170,39 @@
               </div>
             </div>
             <div class="modal-footer">
-              <!-- <button type="button" class="btn btn-primary">sign in</button> -->
+              <button type="button" class="btn btn-primary">confirm</button>
               <!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> -->
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <!-- 上传任务模态框 -->
+      <div class="modal fade" tabindex="-1" role="dialog" id="upload_modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Upload</h4>
+            </div>
+            <div class="modal-body">
+              <form >
+                <div class="form-group">
+                  <label for="task_name">Task Name</label>
+                  <input type="text" class="form-control" id="task_name" placeholder="Name" name="Name">
+                </div>
+                <div class="form-group">
+                  <label for="file_select">Select File</label>
+                  <input type="file" multiple="multiple" name="file_select" class="form-control" id="file_select" required="required">
+                </div>
+                <div class="form-group">
+                  <label for="Description">Description</label>
+                  <input type="text" class="form-control" id="Description" placeholder="Description" name="Description">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">submit</button>
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

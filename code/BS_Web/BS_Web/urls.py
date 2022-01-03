@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from user import views as user_view
+from task import views as task_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,4 +24,5 @@ urlpatterns = [
     path('register/', user_view.register),
     path('login/', user_view.login),
     path('findpasswd/', user_view.findPassword),
+    path('uploadTask/', task_view.createTask),
 ]

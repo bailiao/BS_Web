@@ -7,6 +7,7 @@ class Task(models.Model):
     Name = models.CharField(max_length=255, blank=False)
     State = models.BooleanField()
     Description = models.TextField(blank=True,null=True,default="The label task")
+    CreatedTime = models.DateTimeField(auto_now_add=True)
 
 class Image(models.Model):
     Task = models.ManyToManyField(Task)
