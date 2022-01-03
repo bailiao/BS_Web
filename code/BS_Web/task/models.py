@@ -17,3 +17,4 @@ class getTask(models.Model):
     Task = models.ManyToManyField(Task)
     Publisher = models.ManyToManyField(User,related_name="Publisher")
     Obtainer = models.ManyToManyField(User,related_name="Obtainer")
+    State = models.BooleanField()

@@ -13,6 +13,8 @@ import cv2
 import os
 import urllib
 import ipfsApi
+
+from code.BS_Web.user.models import User
 ipfs = ipfsApi.Client('127.0.0.1', 5001)
 from . import models
 
@@ -104,10 +106,47 @@ def getAllTask(request):
         taskItem['CreatedTime']=task.CreatedTime
         user = list(models.User.objects.values('Email').filter(UID=task.User))
         taskItem['Publisher']=user[0]['Email']
+        img = list(models.Image.objects.values().filter(Task=task).first())
+        taskItem['Cover'] = img[0]['Ipfs_hash']
 
         list1.append(taskItem)
 
     return HttpResponse(json.dumps(list1))
+
+def getMyTask(request):
+    data = json.loads(request.body)
+    user = models.User.objects.filter(Email=data['Email']).first()
+    self_task={'publish':[], 'obtain':[]}
+    publish_task_list = list(models.Task.values().filter(User=user))
+    for item in publish_task_list:
+        dict1={}
+        dict1['TID'] = item['TID']
+        dict1['Name'] = item['Name']
+        dict1['State'] = item['State']
+        dict1['Description'] = item['Description']
+        dict1['CratedTime'] = item['CreatedTime']
+        task = models.Task.objects.filter(TID=item['TID']).first()
+        img = list(models.Image.objects.values().filter(Task=task).first())
+        dict1['Cover'] = img[0]['Ipfs_hash']
+        self_task['publish'].append(dict1)
+
+    obtain_task_list = list(models.getTask.objects.values('Task','Publisher','State').filter(Obtainer=user))
+    for item in obtain_task_list:
+        publisher = models.User.objects.values().filter(UID=item['Publisher']).first()
+        task = models.Task.objects.values().filter(TID=item['Task']).first()
+        dict2={}
+        dict2['TID'] = task['TID']
+        dict2['Name'] = task['Name']
+        dict2['State'] = item['State']
+        dict2['Description'] = task['Description']
+        dict2['CratedTime'] = task['CreatedTime']
+        img = list(models.Image.objects.values().filter(Task=task).first())
+        dict2['Cover'] = img[0]['Ipfs_hash']
+        self_task['obtain'].append(dict2)
+
+    return HttpResponse(json.dumps(self_task))
+
+
 
         
 

@@ -42,26 +42,34 @@ $(function() {
     var len = taskList.length;
     console.log(len);
     for(var index = 0; index < len; index++) {
-        console.log(taskList[index]['Ipfs_hash']);
         var img_path = taskList[index]['Ipfs_hash'];
-        // let template = " \
-        //     <article class='white-panel' id="+item['TID']+"> \
-        //         <img src="+ipfs_img+Task['Ipfs_hash']+" /> \
-        //         <p> Name: "+Task['Name']+"</p> \
-        //         <p> Publisher: "+Task['User']+"</p> \
-        //         <p> Description: "+Task['Description']+"</p> \
-        //     </article>"
-        // node.append(template);
         let template = " \
-            <article class='white-panel' id="+ index++ +"> \
-                <img src="+ipfs_img+img_path+" /> \
-                <p> Name: "+"Name"+"</p> \
-                <p> Publisher: "+"Publisher"+"</p> \
-                <p> Description: "+"Description"+"</p> \
-            </article>"
+            <div class='col-sm-6 col-md-4' > \
+                <div class='thumbnail' >\
+                <img src="+ipfs_img+Task['Ipfs_hash']+" /> \
+                    <div class='caption'> \
+                        <h3>"+Task['Name']+"</h3> \
+                        <p>"+Task['Description']+"</p> \
+                        <p> Sate: "+Task['State']+"</p> \
+                        <p> CreatedTime: "+Task['CreatedTime']+"</p> \
+                    </div> \
+                </div> \
+            </div> "
+        let template = " \
+        <div class='col-sm-6 col-md-4' > \
+            <div class='thumbnail' >\
+            <img src="+ipfs_img+Task['Ipfs_hash']+" /> \
+                <div class='caption'> \
+                    <h3> Name </h3> \
+                    <p> abaaba </p> \
+                    <p> Sate: </p> \
+                    <p> CreatedTime: </p> \
+                </div> \
+            </div> \
+        </div> "
         let node = $(template);
-        $("#gallery-wrapper").append(node);
-        $("#gallery-wrapper").trigger("create");
+        $("#publish_task").append(node);
+        $("#publish_task").trigger("create");
 
     }
     // }
