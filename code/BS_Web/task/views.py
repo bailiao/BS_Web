@@ -12,6 +12,7 @@ import pytz
 import cv2
 import os
 import urllib
+import time
 import ipfsApi
 
 ipfs = ipfsApi.Client('127.0.0.1', 5001)
@@ -23,10 +24,12 @@ video_img = "D:/django/BS_Web/Image/"     #需要修改为自己的Video路径
 def createTask(request):
     data = json.loads(request.body)
     user = models.User.objects.filter(Email=data['Email']).first()
-    path = data['Path']
-    task = models.Task.objects.create(TID=uuid.uuid4(), Name=data['Name'], State=False, Description=data['Description'])
+    path = eval(data['Path'])
+    task = models.Task.objects.create(TID=uuid.uuid4(), Name=data['Name'], Description=data['Description'])
     task.User.add(user)
+    print(type(path))
     for item in path:
+        print(item)
         image = models.Image.objects.create(Ipfs_hash=item)
         image.Task.add(task)
 
@@ -70,7 +73,7 @@ def processVideo(request):
             # print("write...")
             theFile = video_img + key[0]+str(c/timeF) + '.jpg'
             cv2.imwrite(theFile, frame)  # 存储为图像
-            res = ipfs.add(theFile)[0]
+            res = ipfs.add(theFile)[0]['Hash']
             print(res)
             list1.append(res)
             # print("success!")
@@ -80,33 +83,27 @@ def processVideo(request):
     print("==================================")
     return HttpResponse(json.dumps(list1))
 
-def createVideoTask(request):
-    data = json.loads(request.body)
-    user = models.User.objects.filter(Email=data['Email']).first()
-    path = data['Path']
-    task = models.Task.objects.create(TID=uuid.uuid4(), Name=data['Name'], State=False, Description=data['Description'])
-    task.User.add(user)
-    for item in path:
-        image = models.Image.objects.create(Ipfs_hash=item)
-        image.Task.add(task)
-
-    return HttpResponse("上传成功")
-
 def getAllTask(request):
     list1=[]
     
-    taskList = models.Task.objects.all()
+    taskList = models.Task.objects.values().all()
+    
     for task in taskList:
+        # print(task)
         taskItem={}
-        taskItem['TID']=task.TID
-        taskItem['Name']=task.Name
-        taskItem['State']=task.State
-        taskItem['Description']=task.Description
-        taskItem['CreatedTime']=task.CreatedTime
-        user = list(models.User.objects.values('Email').filter(UID=task.User))
-        taskItem['Publisher']=user[0]['Email']
-        img = list(models.Image.objects.values().filter(Task=task).first())
-        taskItem['Cover'] = img[0]['Ipfs_hash']
+        taskItem['TID']=str(task['TID'])
+        # print(task['TID'], taskItem['TID'])
+        taskItem['Name']=task['Name']
+        taskItem['Description']=task['Description']
+        taskItem['CreatedTime']=task['CreatedTime'].strftime('%Y-%m-%d %H:%M:%S')
+        uid = models.Task.objects.values('User').filter(TID=task['TID']).first()
+        # print(uid)
+        user = models.User.objects.values('Email').filter(UID=uid['User']).first()
+        print(user)
+        taskItem['Publisher']=user['Email']
+        img = models.Image.objects.values().filter(Task=task['TID']).first()
+        # print(img)
+        taskItem['Cover'] = img['Ipfs_hash']
 
         list1.append(taskItem)
 
@@ -114,38 +111,51 @@ def getAllTask(request):
 
 def getMyTask(request):
     data = json.loads(request.body)
+    print(data)
     user = models.User.objects.filter(Email=data['Email']).first()
     self_task={'publish':[], 'obtain':[]}
-    publish_task_list = list(models.Task.values().filter(User=user))
+    publish_task_list = list(models.Task.objects.values().filter(User=user))
     for item in publish_task_list:
         dict1={}
-        dict1['TID'] = item['TID']
+        dict1['TID'] = str(item['TID'])
         dict1['Name'] = item['Name']
-        dict1['State'] = item['State']
         dict1['Description'] = item['Description']
-        dict1['CratedTime'] = item['CreatedTime']
+        dict1['CratedTime'] = item['CreatedTime'].strftime('%Y-%m-%d %H:%M:%S')
         task = models.Task.objects.filter(TID=item['TID']).first()
-        img = list(models.Image.objects.values().filter(Task=task).first())
-        dict1['Cover'] = img[0]['Ipfs_hash']
+        img = models.Image.objects.values().filter(Task=task).first()
+        dict1['Cover'] = img['Ipfs_hash']
         self_task['publish'].append(dict1)
 
-    obtain_task_list = list(models.getTask.objects.values('Task','Publisher','State').filter(Obtainer=user))
+    obtain_task_list = list(models.getTask.objects.values('Task','Publisher','State', 'Time').filter(Obtainer=user))
+    print(obtain_task_list)
     for item in obtain_task_list:
         publisher = models.User.objects.values().filter(UID=item['Publisher']).first()
-        task = models.Task.objects.values().filter(TID=item['Task']).first()
+        task_i = models.Task.objects.values().filter(TID=item['Task']).first()
+        task = models.Task.objects.filter(TID=item['Task']).first()
         dict2={}
-        dict2['TID'] = task['TID']
-        dict2['Name'] = task['Name']
+        dict2['TID'] = str(task_i['TID'])
+        dict2['Name'] = task_i['Name']
+        dict2['Publisher'] = publisher['Name']
         dict2['State'] = item['State']
-        dict2['Description'] = task['Description']
-        dict2['CratedTime'] = task['CreatedTime']
-        img = list(models.Image.objects.values().filter(Task=task).first())
-        dict2['Cover'] = img[0]['Ipfs_hash']
+        dict2['Description'] = task_i['Description']
+        dict2['Time'] = item['Time'].strftime('%Y-%m-%d')
+        img = models.Image.objects.values().filter(Task=task).first()
+        dict2['Cover'] = img['Ipfs_hash']
         self_task['obtain'].append(dict2)
-
+    print(self_task)
     return HttpResponse(json.dumps(self_task))
 
-
+def obtainTask(request):
+    data = json.loads(request.body)
+    print(data)
+    task = models.Task.objects.filter(TID=data['Task']).first()
+    obtainer = models.User.objects.filter(Email=data['Obtainer']).first()
+    publisher = models.User.objects.filter(Email=data['Publisher']).first()
+    task_obtained = models.getTask.objects.create()
+    task_obtained.Task.add(task)
+    task_obtained.Obtainer.add(obtainer)
+    task_obtained.Publisher.add(publisher)
+    return HttpResponse("领取成功")
 
         
 

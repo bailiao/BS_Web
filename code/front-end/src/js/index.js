@@ -18,6 +18,13 @@ const server = "http://127.0.0.1:8000";
 
 $(function(){
     /* 模态框显示 */
+
+    if(checkIdentify()) {
+        $("#log_in_out").text("Logout")
+    }else {
+        $("#log_in_out").text("Login")
+    }
+
     $("#log_in_out").on("click", function() {
         var IsLogin = checkIdentify();
         console.log(IsLogin);
@@ -175,24 +182,21 @@ $(function(){
             data['Email'] = getCookie("UID");
             data['Path'] = path;
             console.log(data);
-            // $.post(`${server}/uploadTask/`, JSON.stringify(data), function(data) {
-            //     $("#upload_modal").modal('hide');
-            //     if(data) {
-            //         alert("上传成功");
-            //     }else {
-            //         alert("上传失败！")
-            //     }
+            $.post(`${server}/uploadTask/`, JSON.stringify(data), function(data) {
+                $("#upload_modal").modal('hide');
+                if(data) {
+                    alert("上传成功");
+                }else {
+                    alert("上传失败！")
+                }
 
                 
-            // });
+            });
         }else if("video" == type) {
             console.log(data);
             var formData = new FormData();
             console.log($(".videoinput").get(0).files[0].name);
             formData.append($(".videoinput").get(0).files[0].name, $(".videoinput").get(0).files[0]);
-            // formData.append("Email", getCookie("UID"));
-            // formData.append("Name", data['Name']);
-            // formData.append("Description", data['Description']);
             console.log(formData);
             $.ajax({
                 type:'post',
@@ -202,7 +206,6 @@ $(function(){
 				processData : false,
         		success : function(res) {
         			console.log(res);
-                    var path = saveImageOnIpfs(res)
 					data['Email'] = getCookie("UID");
                     data['Path'] = res;
                     console.log(data);
@@ -219,37 +222,31 @@ $(function(){
                     });
 				}
             })
-            // $.post(`${server}/processVideo/`, formData, function(res) {
-            //     $("#upload_modal").modal('hide');
-            //     if(res) {
-            //         alert("上传成功");
-            //     }else {
-            //         alert("上传失败！")
-            //     }
-            // });
         }
     })
-
-    
-    // let saveImageOnIpfs = (reader) => {
-    //     return new Promise(function(resolve, reject) {
-    //         const buffer = Buffer.from(reader.result);
-    //         ipfs.add(buffer).then((response) => {
-    //             console.log(response)
-    //             resolve(response[0].hash);
-    //         }).catch((err) => {
-    //             console.error(err)
-    //             reject(err);
-    //         })
-    //     })
-    // }   
   
     /* 获取图片上传到IPFS */
     /* 获取表单数据并提交至后端 */
 
     /* 跳转网页 */
     $("#get_task").on("click", function(){
-        $(location).prop('href', './taskList.html');
+        if(checkIdentify()){
+            $(location).prop('href', './taskList.html');
+            
+        }else {
+            alert("请先登录！")
+        }
+        
+    })
+
+    $("#self").on("click", function(){
+        if(checkIdentify()){
+            $(location).prop('href', './self.html');
+            
+        }else {
+            alert("请先登录！")
+        }
+        
     })
 
     $("#test").on("click", function() {
@@ -296,25 +293,3 @@ function clearCookie(name) {
     setCookie(name, "", -1); 
 
 } 
-
-function saveImageOnIpfs(file_list) {
-    var len = file_list.length;
-    console.log(len);
-    var path = new Array();
-    for(var i = 0; i < len; i++) {
-        const file = file_list[i];
-        let reader = new FileReader();
-        reader.readAsArrayBuffer(file);
-        // console.log(reader);
-        reader.onload = function() {
-            console.log(reader.result);
-            let buffer = Buffer.from(reader.result);
-            ipfs.add(buffer).then(res=>{
-                console.log("res: ", res.path);
-                path.push(res.path);
-            })
-        }
-        
-    }
-    return path;
-}

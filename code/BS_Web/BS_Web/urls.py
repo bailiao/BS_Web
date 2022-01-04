@@ -20,10 +20,12 @@ from task import views as task_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('runoob/', user_view.runoob),
     path('register/', user_view.register),
     path('login/', user_view.login),
     path('findpasswd/', user_view.findPassword),
     path('uploadTask/', task_view.createTask),
     path('processVideo/', task_view.processVideo),
+    path('getAllTask/', task_view.getAllTask),
+    path('getMyTask/', task_view.getMyTask),
+    path('obtainTask/', task_view.obtainTask),
 ]

@@ -46,6 +46,8 @@ module.exports = {
     entry: {
         index:"./src/js/index.js",
         task:"./src/js/task.js",
+        self:"./src/js/self.js",
+        mark:"./src/js/mark.js",
     },
     output: {
         filename: "js/[name].js",
@@ -100,6 +102,16 @@ module.exports = {
             template: './src/html/taskList.html',
             filename: 'taskList.html',
             chunks: ['task']
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/html/self.html',
+            filename: 'self.html',
+            chunks: ['self']
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/html/mark.html',
+            filename: 'mark.html',
+            chunks: ['mark']
         }),
         // new MiniCssExtractPlugin({
         //     filename: 'style.css',

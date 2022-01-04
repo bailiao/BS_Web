@@ -11,16 +11,6 @@ import datetime
 import pytz
 from . import models
 
- 
-def runoob(request):
-    context = {}
-    data = json.loads(request.body)
-    # data = request.body
-    print(data)
-    context['hello'] = 'Hello World!'
-    return HttpResponse("response")
-
-
 # Create your views here.
 def register(request):
     data = json.loads(request.body)
@@ -29,7 +19,7 @@ def register(request):
         return HttpResponse("邮箱已被注册")
     else:
         data['UID'] = uuid.uuid4()
-        models.User.objects.create(**data)
+        models.User.objects.create(UID=data['UID'],Name=data['Name'],Password=data['Password'],Email=data['Email'])
         return HttpResponse("注册成功！")
 
 def login(request):
