@@ -170,11 +170,14 @@ $(function(){
                 reader.readAsArrayBuffer(file);
                 // console.log(reader);
                 reader.onload = function() {
+                    let dict={}
                     console.log(reader.result);
                     let buffer = Buffer.from(reader.result);
                     ipfs.add(buffer).then(res=>{
                         console.log("res: ", res.path);
-                        path.push(res.path);
+                        dict['Name'] = file.name;
+                        dict['Path'] = res.path;
+                        path.push(dict);
                     })
                 }
                 

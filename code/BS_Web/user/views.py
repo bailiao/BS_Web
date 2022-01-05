@@ -129,9 +129,6 @@ def verifyCode(request):
         return HttpResponse("邮箱未注册")
 
 
-
-
-
 # def addFavor(request):
 #     data = json.loads(request.body)
 #     user = models.User.objects.filter(Email=data['Email']).first()

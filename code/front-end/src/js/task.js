@@ -54,48 +54,30 @@ $(function() {
                 $("#gallery-wrapper").append(node);
                 $("#gallery-wrapper").trigger("create");
 
-                $("#gallery-wrapper").on('click', '.btn-primary', function(e) {
-                    var index = $(e.currentTarget).parent().prop("id");
-                    console.log(index);
-                    let data = {};
-                    data['Obtainer'] = getCookie("UID");
-                    data['Task'] = taskList[index]['TID'];
-                    data['Publisher'] = taskList[index]['Publisher'];
-                    console.log(data);
-                    $.post(`${server}/obtainTask/`, JSON.stringify(data), function(res) {
-                        if(res === "领取成功") {
-                            $(e.currentTarget).parent().hide()
-                            alert("领取成功");
-                        }else {
-                            alert("领取失败");
-                        }
-                    });
-                })
+                
             }
         }
         /* 页面渲染 */
     });
-    
-    // taskList = [
-    //     {
-    //         Ipfs_hash: "QmPCHhXvrw4aHZHMihU9DZqZG8uvEDA11tnH9z2gq3djTF"
-    //     },
-    //     {
-    //         Ipfs_hash: "QmPQ1zJMu3qUmdqiC3XrwMCE68idt2J1twXKPUQebWWn44"
-    //     },
-    //     {
-    //         Ipfs_hash: "QmWqxyoRXUNto16U8AgdLjTcFYJqTowKvYairt7zB8GmhR"
-    //     },
-    //     {
-    //         Ipfs_hash: "QmYySiKB92DtnDMG2Hvb7VAsfDsRuBJ8psuLStMktBVEVj"
-    //     },
-    //     {
-    //         Ipfs_hash: "QmXsw7qoSggKgYfE4Z9vJvnN59opxgPNvayPvbKK21SDmH"
-    //     },
-    // ]
 
     /* 领取任务 */
-        
+    $("#gallery-wrapper").on('click', '.btn-primary', function(e) {
+        var index = $(e.currentTarget).parent().prop("id");
+        console.log(index);
+        let data = {};
+        data['Obtainer'] = getCookie("UID");
+        data['Task'] = taskList[index]['TID'];
+        data['Publisher'] = taskList[index]['Publisher'];
+        console.log(data);
+        $.post(`${server}/obtainTask/`, JSON.stringify(data), function(res) {
+            if(res === "领取成功") {
+                $(e.currentTarget).parent().hide()
+                alert("领取成功");
+            }else {
+                alert("领取失败");
+            }
+        });
+    })
     /* 领取任务 */
 
     /* 窗口切换 */

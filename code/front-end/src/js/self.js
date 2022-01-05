@@ -27,14 +27,14 @@ $(function() {
             for(var index = 0; index < len; index++) {
                 var img_path = publish_taskList[index]['Cover'];
                 let template = " \
-                    <div class='col-sm-6 col-md-4' > \
+                    <div class='col-sm-6 col-md-4' id="+publish_taskList[index]['TID']+" > \
                         <div class='thumbnail' >\
                         <img src="+ipfs_img+img_path+" /> \
                             <div class='caption'> \
                                 <h3>"+publish_taskList[index]['Name']+"</h3> \
                                 <p>"+publish_taskList[index]['Description']+"</p> \
                                 <p> CreatedTime: "+publish_taskList[index]['CreatedTime']+"</p> \
-                                <p><a href='#'' class='btn btn-primary' role='button'>导出</a> <a href='#' class='btn btn-default' role='button'>撤销</a></p> \
+                                <p><a class='btn btn-primary btn-out' role='button'>导出</a> <a class='btn btn-default btn-cancel' role='button'>撤销</a></p> \
                             </div> \
                         </div> \
                     </div> "
@@ -60,7 +60,7 @@ $(function() {
             for(var index = 0; index < len; index++) {
                 var img_path = obtain_taskList[index]['Cover'];
                 let template = " \
-                    <div class='col-sm-6 col-md-4' > \
+                    <div class='col-sm-6 col-md-4' id="+index+"_"+obtain_taskList[index]['TID']+" > \
                         <div class='thumbnail' >\
                         <img src="+ipfs_img+img_path+" /> \
                             <div class='caption'> \
@@ -69,7 +69,7 @@ $(function() {
                                 <p>"+obtain_taskList[index]['Description']+"</p> \
                                 <p> Sate: "+obtain_taskList[index]['State']+"</p> \
                                 <p> CreatedTime: "+obtain_taskList[index]['CreatedTime']+"</p> \
-                                <p><a href='#'' class='btn btn-primary' role='button'>标注</a> <a href='#' class='btn btn-default' role='button'>放弃</a></p> \
+                                <p><button class='btn btn-primary btn-mark'>标注</button> <button class='btn btn-default btn-dicard'>放弃</button></p> \
                             </div> \
                         </div> \
                     </div> "
@@ -80,39 +80,76 @@ $(function() {
             }
         }
     })
-    // taskList = [
-    //     {
-    //         Ipfs_hash: "QmPCHhXvrw4aHZHMihU9DZqZG8uvEDA11tnH9z2gq3djTF"
-    //     },
-    //     {
-    //         Ipfs_hash: "QmPQ1zJMu3qUmdqiC3XrwMCE68idt2J1twXKPUQebWWn44"
-    //     },
-    //     {
-    //         Ipfs_hash: "QmWqxyoRXUNto16U8AgdLjTcFYJqTowKvYairt7zB8GmhR"
-    //     },
-    //     {
-    //         Ipfs_hash: "QmYySiKB92DtnDMG2Hvb7VAsfDsRuBJ8psuLStMktBVEVj"
-    //     },
-    //     {
-    //         Ipfs_hash: "QmXsw7qoSggKgYfE4Z9vJvnN59opxgPNvayPvbKK21SDmH"
-    //     },
-    // ]
-    // function buildTask(taskList) {
-    // alert("sss")
     
 
     /* 进入图片标注（传给TID） */
-
-
+    $("#obtain_task").on('click', '.btn-mark', function(e){
+        alert("sss")
+        var id = $(e.currentTarget).closest(".col-sm-6").prop("id");
+        var str = id.split("_")
+        console.log(id);
+        var index = str[0]
+        var tid = str[1];
+        $(location).prop('href', './mark.html?TID='+tid+"&Publisher="+obtain_taskList[index]['Publisher']+"&Time="+obtain_taskList[index]['Time']);
+    })
     /* 进入图片标注 */
 
     /* 丢弃或撤销任务 */
+    $("#publish_task").on('click', '.btn-cancel', function(e){
+        var id = $(e.currentTarget).closest(".col-sm-6").prop("id");
+        let data={};
+        data['TID'] = id;
+        $.ajax({
+            type:'post',
+            url:`${server}/cancelTask/`,
+            data: JSON.stringify(data),
+            success: function(res){
+                if(res === "撤销成功") {
+                    alert("撤销成功")
+                }else {
+                    alert("撤销失败")
+                }
+            }
+        })
+    })
+
+    $("#obtain_task").on('click', '.btn-dicard', function(e){
+        var id = $(e.currentTarget).closest(".col-sm-6").prop("id");
+        console.log(id);
+        $.ajax({
+            type:'post',
+            url:`${server}/discardTask/`,
+            data: JSON.stringify(data),
+            success: function(res){
+                if(res === "丢弃成功") {
+                    alert("丢弃成功")
+                }else {
+                    alert("丢弃失败")
+                }
+            }
+        })
+    })
 
     /* 丢弃或撤销任务 */
 
     /* 导出任务 */
 
     /* 导出任务 */
+
+    /* 窗口切换 */
+    $(".navbar-brand").on("click", function(){
+        $(location).prop('href', './index.html');
+    })
+
+    $("#log_in_out").on("click", function(){
+        clearCookie("UID");
+        $(location).prop('href', './index.html');
+    })
+
+    $("#To_taskList").on("click", function(){
+        $(location).prop('href', './taskList.html');
+    })
+    /* 窗口切换 */
 
 });
 

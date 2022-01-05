@@ -28,4 +28,7 @@ urlpatterns = [
     path('getAllTask/', task_view.getAllTask),
     path('getMyTask/', task_view.getMyTask),
     path('obtainTask/', task_view.obtainTask),
+    path('cancelTask/',task_view.cancelTask),
+    path('discardTask/',task_view.discardTask),
+    path('getOneTask/',task_view.getOneTask),
 ]

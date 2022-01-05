@@ -10,6 +10,7 @@ class Task(models.Model):
 
 class Image(models.Model):
     Task = models.ManyToManyField(Task)
+    Name = models.CharField(max_length=255)
     Ipfs_hash = models.CharField(max_length=70)
 
 class getTask(models.Model):

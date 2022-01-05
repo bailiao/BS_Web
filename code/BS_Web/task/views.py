@@ -30,7 +30,7 @@ def createTask(request):
     print(type(path))
     for item in path:
         print(item)
-        image = models.Image.objects.create(Ipfs_hash=item)
+        image = models.Image.objects.create(Name=item['Name'],Ipfs_hash=item['Path'])
         image.Task.add(task)
 
     return HttpResponse("上传成功")
@@ -71,11 +71,14 @@ def processVideo(request):
         # print(c,timeF,c%timeF)
         if (c % timeF == 0):# 每隔timeF帧进行存储操作
             # print("write...")
+            dict={}
             theFile = video_img + key[0]+str(c/timeF) + '.jpg'
             cv2.imwrite(theFile, frame)  # 存储为图像
             res = ipfs.add(theFile)[0]['Hash']
+            dict['Name'] = key[0]+str(c/timeF) + '.jpg'
+            dict['Path'] = res
             print(res)
-            list1.append(res)
+            list1.append(dict)
             # print("success!")
         c = c + 100000
     cv2.waitKey(1)
@@ -157,5 +160,35 @@ def obtainTask(request):
     task_obtained.Publisher.add(publisher)
     return HttpResponse("领取成功")
 
+def cancelTask(request):
+    data = json.loads(request.body)
+    print(data)
+    task = models.Task.objects.filter(TID=data['TID']).first()
+    imageList = list(models.Image.objects.filter(Task=task).all())
+    for img in imageList:
+        img.delete()
+    task.delete()
+    return HttpResponse("撤销成功")
         
+def discardTask(request):
+    data = json.loads(request.body)
+    print(data)
+    task = models.getTask.objects.filter(TID=data['TID']).first()
+    task.delete()
+    return HttpResponse("丢弃成功")
 
+def getOneTask(request):
+    data = json.loads(request.body)
+    task = models.Task.objects.values().filter(TID=data['TID']).first()
+    task_image = list(models.Image.objects.values().filter(Task=data['TID']).all())
+    res={}
+    res['Description'] = task['Description']
+    res['Name'] = task['Name']
+    list1=[]
+    for image in task_image:
+       dict={}
+       dict['Name'] = image['Name']
+       dict['Path'] = image['Ipfs_hash']
+       list1.append(dict)
+    res['Image'] = list1
+    return HttpResponse(json.dumps(res))    
