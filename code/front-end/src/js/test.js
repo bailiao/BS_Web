@@ -32,17 +32,22 @@ function init() {
         stroke: '#FD9D91',
         strokeUniform: true,
         strokeWidth: 2,
+        originX: "center",
+        originY: "top",
     })
-    canvas.setBackgroundImage(
-        'http://127.0.0.1:8080/ipfs/QmPCHhXvrw4aHZHMihU9DZqZG8uvEDA11tnH9z2gq3djTF',
-        canvas.renderAll.bind(canvas),
-        // {
-        //     width: canvas.width,
-        //     height: canvas.height,
-        //     scaleX: canvas.width / 500,
-        //     scaleY: canvas.height / 500,
-        // }
-    )
+    const text = new fabric.Textbox("helloworld",{
+        top: 60, // 距离容器顶部 30px
+        left: 60, // 距离容器左侧 30px
+        fontSize: 10,
+        fill: '#f6416c',
+        originX: "right",
+        originY: "bottom",
+    })
+
+    const group = new fabric.Group([rect1, text], {
+        top: 60, 
+        left: 60, 
+    })
     var image = 'https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/27d1b4e5f8824198b6d51a2b1c2d0d75~tplv-k3u1fbpfcp-zoom-crop-mark:400:400:400:400.awebp'
     console.log(image);
     fabric.Image.fromURL( 
@@ -61,12 +66,18 @@ function init() {
         })
 
     
-    rect.on('selected', options => {
-        console.log('选中矩形啦', options)
+    // rect.on('selected', options => {
+    //     console.log('选中矩形啦', options)
+    //     console.log($(this))
+    // })
+
+    rect.on('selected', (options) => {
+        console.log('选中矩形啦', options.target)
     })
 
-    rect1.on('selected', options => {
-        console.log('选中矩形啦', options)
+    group.on('selected', (options) => {
+        console.log('选中矩形啦', options.target.item(1))
+
     })
 
     canvas.on('mouse:down', options => {
@@ -105,7 +116,7 @@ function init() {
     })
   
     // 在canvas画布中加入矩形（rect）。add是“添加”的意思
-    canvas.add(rect,rect1)
+    canvas.add(rect,rect1,text,group)
 }
 
 function setRect(left, top, width, hright) {

@@ -6,7 +6,6 @@ require("../js/bootstrap.js");
 
 const server = "http://127.0.0.1:8000";
 const ipfs_img = "http://127.0.0.1:8080/ipfs/"
-var isDrawing = false;
 var canvas_offset_left;
 var canvas_offset_top;
 var theCanvas;
@@ -140,6 +139,9 @@ function clearCookie(name) {
 
 } 
 
+var isDrawing = false;
+var isText = false;
+var isDelete = false;
 var currentItem;
 function init(len) {
     const canvas = new fabric.Canvas('goMark') // 这里传入的是canvas的id
@@ -149,33 +151,41 @@ function init(len) {
     
     let DrawItem;
 
-    // console.log(image_path);
-    // fabric.Image.fromURL( 
-    //     image_path, 
-    //     (img) => { 
-    //         // 设置背景图 
-    //         canvas.setBackgroundImage( 
-    //             img, 
-    //             canvas.renderAll.bind(canvas), 
-    //             { 
-    //                 scaleX: canvas.width / img.width, // 计算出图片要拉伸的宽度 
-    //                 scaleY: canvas.height / img.height // 计算出图片要拉伸的高度 
-    //             } 
-    //         ) 
-    //     })
-
     $("#ToMark").on("click", function() {
         isDrawing = true;
         // console.log(isDrawing);
     })
 
-    // $("#ToMark").on("click", function() {
-    //     isDrawing = false;
-    // })
+    $("#ToText").on("click", function() {
+        if(isText) {
+            $("#text_modal").modal();
+            
+        }
+        isText = false;
+    })
 
-    // $("#ToMark").on("click", function() {
-    //     isDrawing = true;
-    // })
+    $("#text_modal").find(".modal-footer").find("button").on("click", function() {
+        
+        let data = {};
+        let value = $('#text_modal').find("form").serializeArray();
+        $.each(value, function (index, item) {
+            console.log(item.name);
+            data[item.name] = item.value;
+        });
+        console.log(currentItem.item(1));
+        currentItem.item(1).set('text', data['text_mark']);
+        $("#text_modal").modal('hide');
+        canvas.remove(currentItem);
+        canvas.add(currentItem);
+    });
+
+    $("#ToMark").on("click", function() {
+        if(isDelete) {
+            canvas.remove(currentItem);
+            currentItem = null;
+        }
+        isDelete = false;
+    })
 
     canvas.on('mouse:down', options => {
         // console.log("mouse: "+isDrawing);
@@ -198,7 +208,7 @@ function init(len) {
             let width = `${options.e.clientX}` - absolute_x;
             let height = `${options.e.clientY}` - absolute_y;
             DrawItem = setRect(startx, starty, width, height);
-            canvas.add(DrawItem);
+            // canvas.add(DrawItem);
         }
     })
 
@@ -206,10 +216,34 @@ function init(len) {
         // isDrawing = false;
         // console.log(currentItem);
         // Array[canvas_index].push(currentItem);
+        if(DrawItem) {
+            const text = new fabric.Textbox('标注', {
+                top: DrawItem.top,
+                left: DrawItem.left,
+                fontSize: 20,
+                fill: '#ffffff',
+                originX: "center",
+                originY: "bottom",
+              })
+            DrawItem.originX = "center";
+            DrawItem.originY = "top";
+            // 建组
+            const group = new fabric.Group([DrawItem, text], {
+                top: DrawItem.top, 
+                left: DrawItem.left, 
+            })
+
+            group.on('selected', option => {
+                isText = true;
+                isDelete = true;
+                currentItem = option.target;
+            })  
+            canvas.add(group);
+            
+        }
         isDrag = false;
         isDrawing = false;
         DrawItem = null;
-        currentItem = null;
         console.log(canvas.getObjects());
     })
 
@@ -222,22 +256,19 @@ function init(len) {
     // console.log('canvas toObject', canvas.toObject())
 }
 
-function setRect(left, top, width, hright) {
+function setRect(left, top, width, height) {
     
     let rect = new fabric.Rect({
         left: left,
         top: top,
         width: width,
-        height: hright,
+        height: height,
+        // originX: "center",
+        // originY: "center",
         fill:'',     //不填充颜色，
         stroke: '#FD9D91',
         strokeUniform: true,
         strokeWidth: 2,
-    })
-
-    rect.on('selected', options => {
-        // console.log('选中矩形啦', options);
-        // currentItem = this;
     })
 
     return rect;
