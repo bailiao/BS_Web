@@ -33,7 +33,7 @@ $(function() {
                             <div class='caption'> \
                                 <h3>"+publish_taskList[index]['Name']+"</h3> \
                                 <p>"+publish_taskList[index]['Description']+"</p> \
-                                <p> CreatedTime: "+publish_taskList[index]['CreatedTime']+"</p> \
+                                <p> CreatedTime: "+publish_taskList[index]['Time']+"</p> \
                                 <p><a class='btn btn-primary btn-out' role='button'>导出</a> <a class='btn btn-default btn-cancel' role='button'>撤销</a></p> \
                             </div> \
                         </div> \
@@ -68,7 +68,7 @@ $(function() {
                                 <p> Publisher: "+obtain_taskList[index]['Publisher']+"</p> \
                                 <p>"+obtain_taskList[index]['Description']+"</p> \
                                 <p> Sate: "+obtain_taskList[index]['State']+"</p> \
-                                <p> CreatedTime: "+obtain_taskList[index]['CreatedTime']+"</p> \
+                                <p> CreatedTime: "+obtain_taskList[index]['Time']+"</p> \
                                 <p><button class='btn btn-primary btn-mark'>标注</button> <button class='btn btn-default btn-dicard'>放弃</button></p> \
                             </div> \
                         </div> \
