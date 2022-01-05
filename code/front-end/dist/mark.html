@@ -13,6 +13,7 @@
     <script src="../js/bootstrap.js"></script>
     <script src="../js/jquery.imageLabel.min.js"></script>
     <script src="../js/mark.js"></script> -->
+    <script src="https://unpkg.com/fabric@4.6.0/dist/fabric.min.js"></script>
 <script defer src="js/mark.js"></script></head>
 <body>
     <!-- <form action="" id="imgform">
@@ -87,7 +88,7 @@
                 <div id="sub2" class="collapse panel-collapse">
                     <div class="panel-body">
                         <ul class="nav nav-img">
-                            <li>
+                            <!-- <li>
                                 <a href="#">添加栏目1</a>
                             </li>
                             <li>
@@ -98,7 +99,7 @@
                             </li>
                             <li>
                                 <a href="#">添加栏目4</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
@@ -106,7 +107,8 @@
         </div>
 
         <div class="canvas">
-            <!-- <img src="../images/10.jpg"> -->
+            <img src="">
+            <canvas width="800" height="400" id="goMark" style="border: 1px solid #ccc;"></canvas>
         </div>
     </div>
     <div class="bottom"></div>

@@ -29,8 +29,8 @@ $(function(){
         var IsLogin = checkIdentify();
         console.log(IsLogin);
         if(IsLogin) {
-            // $(this).text("Logout");
             clearCookie("UID");
+            $(this).text("Login");
         }
         else {
             var login_modal = $("#login_modal");
