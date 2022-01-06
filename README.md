@@ -58,43 +58,43 @@
 
 **（由于是在本地运行前后端，而没有部署到服务器上，故部分页面的渲染会比较慢，请耐心等待）**
 
-![](screenshot\3.png)
+<img src="screenshot\3.png" style="zoom:50%;" />
 
 #### 2.1 登录、注册与找回密码
 
 本网站的所有操作基本都需要在登录后才能实现，用户应先进行注册和登录，其中邮箱用于后续的验证码发送
 
-![](screenshot\5.png)
+<img src="screenshot\4.png" style="zoom:50%;" />
 
-![4](screenshot\4.png)
+<img src="screenshot\5.png" style="zoom:50%;" />
 
 #### 2.2 上传任务
 
 登录后，用户可以选择多张图片或是视频进行上传，若是上传视频，则会以一定的帧率进行上传，Video和Image文件夹里用于暂时存放用户上传的视频及划分出来的图片（实际已上传到云），也可以作为本网站功能验证的参考
 
-![](screenshot\6.png)
+<img src="screenshot\6.png" style="zoom:50%;" />
 
 #### 2.3 查看发布任务与领取
 
 查看发布任务界面以**瀑布流**的格式进行设计（此处仅做参考），用户点击领取后可在Your Task页面查看。领取后该任务消失
 
-![](screenshot\7.png)
+<img src="screenshot\7.png" style="zoom:50%;" />
 
 #### 2.4 个人任务界面
 
 该页面展示了所有你发布的任务和领取的任务，可以导出发布任务中其他用户完成任务的coco格式数据（json文件），也可进入到领取任务的标注界面。此外为撤销发布任务和丢弃领取任务
 
-![](screenshot\9.png)
+<img src="screenshot\8.png" style="zoom:50%;" />
 
-![8](screenshot\8.png)
+<img src="screenshot\9.png" style="zoom:50%;" />
 
 #### 2.5 标注功能
 
 标注页面概览如下
 
-![10](screenshot\10.png)
+<img src="screenshot\10.png" style="zoom:50%;" />
 
-![](screenshot\11.png)
+<img src="screenshot\11.png" style="zoom:50%;" />
 
 
 
@@ -102,21 +102,21 @@
 
 
 
-![](screenshot\12.png)
+<img src="screenshot\12.png" style="zoom:50%;" />
 
-![13](screenshot\13.png)
+<img src="screenshot\13.png" style="zoom:50%;" />
 
-![14](screenshot\14.png)
+<img src="screenshot\14.png" style="zoom:50%;" />
 
-![15](screenshot\15.png)
+<img src="screenshot\15.png" style="zoom:50%;" />
 
 
 
 json文件如下，可自行采用排版工具进行格式化
 
-![](screenshot\16.png)
+<img src="screenshot\16.png" />
 
-![17](screenshot\17.png)
+<img src="screenshot\17.png" style="zoom:50%;" />
 
 
 
