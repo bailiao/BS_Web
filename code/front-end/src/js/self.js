@@ -106,6 +106,7 @@ $(function() {
             success: function(res){
                 if(res === "撤销成功") {
                     alert("撤销成功")
+                    $(e.currentTarget).closest(".col-sm-6").remove();
                 }else {
                     alert("撤销失败")
                 }
@@ -116,13 +117,18 @@ $(function() {
     $("#obtain_task").on('click', '.btn-dicard', function(e){
         var id = $(e.currentTarget).closest(".col-sm-6").prop("id");
         console.log(id);
+        var str = id.split("_")
+        var tid = str[1];
+        let data={};
+        data['TID'] = tid;
         $.ajax({
             type:'post',
             url:`${server}/discardTask/`,
             data: JSON.stringify(data),
             success: function(res){
                 if(res === "丢弃成功") {
-                    alert("丢弃成功")
+                    alert("丢弃成功");
+                    $(e.currentTarget).closest(".col-sm-6").remove();
                 }else {
                     alert("丢弃失败")
                 }
@@ -131,7 +137,7 @@ $(function() {
     })
 
     /* 丢弃或撤销任务 */
-    
+
     /* 导出任务 */
 
     /* 导出任务 */

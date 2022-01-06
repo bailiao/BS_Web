@@ -10,7 +10,9 @@ var canvas_offset_left;
 var canvas_offset_top;
 var theCanvas;
 var markArray;
+var ImageArray;
 var old_index;
+var curren_Index;
 
 $(function() {
     // $(".canvas img").hide();
@@ -33,9 +35,11 @@ $(function() {
             $(".list-group-item-warning").text("Description: "+res['Description']);
             $(".list-group-item-danger").text("Time: "+Time);
             var len = res['Image'].length;
+            ImageArray = new Array(len);
             for(var index = 0; index < len; index++) {
                 $(".nav-img").append("<li><a class='display-img' name="+index+" href='#' id="+res['Image'][index]['Path']+">"+res['Image'][index]['Name']+"</a></li>");
                 $(".nav-img").trigger("create");
+                ImageArray[index] = res['Image'][index]['Id'];
                 // let id = "goMark"+index;
                 // $(".canvas_box").append("<canvas width='900' height='500' id="+id+" style='border:1px solid #ccc'></canvas>")
                 // $(".canvas_box").trigger("create");
@@ -60,9 +64,10 @@ $(function() {
     $(".nav-img").on("click", '.display-img', function(){
         // alert("sss")
         // $(".canvas img").show();
-        index = $(this).prop("name");
-        img_path = $(this).prop("id");
+        let index = $(this).prop("name");
+        let img_path = $(this).prop("id");
         console.log("index: "+index+" "+old_index);
+        curren_Index = index;
         // id="goMark"+index;
         // $("#"+id).show();
         if(old_index)
@@ -88,6 +93,13 @@ $(function() {
         })
     })
     /* 侧边栏 */
+
+    /* 保存和导出 */
+    $("#ToExport").on("click", function(){
+        markArray[curren_Index] = theCanvas.getObjects();
+        toJson(markArray, ImageArray);
+    })
+    /* 保存和导出 */
 
     /* 窗口切换 */
     $(".navbar-brand").on("click", function(){
@@ -237,7 +249,8 @@ function init(len) {
                 isText = true;
                 isDelete = true;
                 currentItem = option.target;
-            })  
+            }) 
+            // console.log("group: ", group.item(0).left, group.left, DrawItem.left)
             canvas.add(group);
             
         }
@@ -248,12 +261,6 @@ function init(len) {
     })
 
     return canvas;
-  
-    // 在canvas画布中加入矩形（rect）。add是“添加”的意思
-
-    // console.log('canvas stringify ', JSON.stringify(canvas))
-    // console.log('canvas toJSON', canvas.toJSON())
-    // console.log('canvas toObject', canvas.toObject())
 }
 
 function setRect(left, top, width, height) {
@@ -290,9 +297,49 @@ function setCanvas(image_path, canvas, index) {
                 } 
             ) 
         })
-    let len = markArray[index].length;
+    let len;
+    if(markArray[index]) len = markArray[index].length;
     for(var i = 0; i < len; i++) {
         console.log(markArray[index][i]);
         canvas.add(markArray[index][i]);
     }
+}
+
+function toJson(Array, Image_Array){
+    // canvas.clear()
+    console.log(Image_Array);
+    let data={}
+    let len1, len2;
+    data['TID'] = getUrlParam("TID");
+    data['Publisher'] = getUrlParam("Publisher");
+    data['ImageInfo'] = []
+    if(Array) len1 = Array.length;
+    for(var j = 0; j < len1; j++) {
+        if(Array[j]) len2 = Array[j].length;
+        else len2 = 0;
+        for(var i = 0; i < len2; i++) {
+            // console.log(getUrlParam("TID"),Image_Array[j], Array[j][i].left, Array[j][i].top, Array[j][i].item(0).width,Array[j][i].item(0).height,Array[j][i].item(1).text);
+            // canvas.add(Array[index][i]);
+            // console.log(len1,len2);
+            dict={}
+            dict['Image'] = ImageArray[j];
+            dict['Left'] = Array[j][i].left;
+            dict['Top'] = Array[j][i].top;
+            dict['Width'] = Array[j][i].item(0).width;
+            dict['Height'] = Array[j][i].item(0).height;
+            dict['Text'] = Array[j][i].item(1).text;
+            data['ImageInfo'].push(dict);
+            // console.log("dict ",dict)
+        }
+    }
+    console.log("data: ",data)
+    $.ajax({
+        type:'post',
+        url:`${server}/saveInfo/`,
+        data:JSON.stringify(data),
+    })
+    
+    // console.log('Array stringify ', JSON.stringify(Array[index]))
+    // console.log('canvas stringify ', JSON.stringify(canvas))
+    // console.log('canvas toJSON', canvas.toJSON())
 }

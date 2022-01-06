@@ -23,6 +23,7 @@ urlpatterns = [
     path('register/', user_view.register),
     path('login/', user_view.login),
     path('findpasswd/', user_view.findPassword),
+    path('verify/',user_view.verifyCode),
     path('uploadTask/', task_view.createTask),
     path('processVideo/', task_view.processVideo),
     path('getAllTask/', task_view.getAllTask),
@@ -31,4 +32,5 @@ urlpatterns = [
     path('cancelTask/',task_view.cancelTask),
     path('discardTask/',task_view.discardTask),
     path('getOneTask/',task_view.getOneTask),
+    path('saveInfo/',task_view.saveInfo),
 ]

@@ -107,6 +107,20 @@ $(function(){
         });
     })
 
+    $("#findpasswd_modal").find(".form-group").find("button").on("click", function(){
+        let data = {};
+        data['Email'] = getCookie("UID");
+        console.log(JSON.stringify(data));
+        $.post(`${server}/findPassword/`, JSON.stringify(data), function(res) {
+            $("#login_modal").modal('hide');
+            if(res === "验证码已发送，请查收邮件") {
+                alert("验证码已发送，请查收邮件");
+            }else {
+                alert("验证码发送失败")
+            }
+        });
+    })
+
     $("#findpasswd_modal").find(".modal-footer").find("button").on("click", function(){
         let data = {};
         let value = $('#findpasswd_modal').find("form").serializeArray();
@@ -115,16 +129,14 @@ $(function(){
             data[item.name] = item.value;
         });
         console.log(JSON.stringify(data));
-        // $.post(`${server}/runoob/`, JSON.stringify(data), function(data) {
-        //     $("#login_modal").modal('hide');
-        //     if(data) {
-        //         alert("找回密码成功");
-        //     }else {
-        //         alert("找回密码失败！")
-        //     }
-
-            
-        // });
+        $.post(`${server}/verify/`, JSON.stringify(data), function(data) {
+            $("#login_modal").modal('hide');
+            if(data) {
+                alert("找回密码成功");
+            }else {
+                alert("找回密码失败！")
+            }
+        });
     })
     /* 获取表单数据并提交至后端 */
     var modalBox = $("#upload_modal input:checkbox");

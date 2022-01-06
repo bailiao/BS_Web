@@ -2,7 +2,6 @@ from django.db.models.fields.related import create_many_to_many_intermediary_mod
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.mail import send_mail
-from threading import Thread     # 导入线程模块
 from BS_Web import settings
 import json
 import uuid
@@ -16,10 +15,12 @@ import time
 import ipfsApi
 
 ipfs = ipfsApi.Client('127.0.0.1', 5001)
+img_profix = "http://ipfs.io/ipfs/"
 from . import models
 
 video = "D:/django/BS_Web/Video/"     #需要修改为自己的Video路径
 video_img = "D:/django/BS_Web/Image/"     #需要修改为自己的Video路径
+json_save = "D:/django/BS_Web/json/"
 
 def createTask(request):
     data = json.loads(request.body)
@@ -122,6 +123,7 @@ def getMyTask(request):
         dict1={}
         dict1['TID'] = str(item['TID'])
         dict1['Name'] = item['Name']
+        dict1['State'] = item['State']
         dict1['Description'] = item['Description']
         dict1['CratedTime'] = item['CreatedTime'].strftime('%Y-%m-%d %H:%M:%S')
         task = models.Task.objects.filter(TID=item['TID']).first()
@@ -129,7 +131,7 @@ def getMyTask(request):
         dict1['Cover'] = img['Ipfs_hash']
         self_task['publish'].append(dict1)
 
-    obtain_task_list = list(models.getTask.objects.values('Task','Publisher','State', 'Time').filter(Obtainer=user))
+    obtain_task_list = list(models.getTask.objects.values('Task','Publisher','Time').filter(Obtainer=user))
     print(obtain_task_list)
     for item in obtain_task_list:
         publisher = models.User.objects.values().filter(UID=item['Publisher']).first()
@@ -138,8 +140,7 @@ def getMyTask(request):
         dict2={}
         dict2['TID'] = str(task_i['TID'])
         dict2['Name'] = task_i['Name']
-        dict2['Publisher'] = publisher['Name']
-        dict2['State'] = item['State']
+        dict2['Publisher'] = publisher['Email']
         dict2['Description'] = task_i['Description']
         dict2['Time'] = item['Time'].strftime('%Y-%m-%d')
         img = models.Image.objects.values().filter(Task=task).first()
@@ -173,8 +174,9 @@ def cancelTask(request):
 def discardTask(request):
     data = json.loads(request.body)
     print(data)
-    task = models.getTask.objects.filter(TID=data['TID']).first()
-    task.delete()
+    task = models.Task.objects.filter(TID=data['TID']).first()
+    obtain_task = models.getTask.objects.filter(Task=task).first()
+    obtain_task.delete()
     return HttpResponse("丢弃成功")
 
 def getOneTask(request):
@@ -187,8 +189,61 @@ def getOneTask(request):
     list1=[]
     for image in task_image:
        dict={}
+       dict['Id'] = image['id']
        dict['Name'] = image['Name']
        dict['Path'] = image['Ipfs_hash']
        list1.append(dict)
     res['Image'] = list1
     return HttpResponse(json.dumps(res))    
+
+def saveInfo(request):
+    data = json.loads(request.body)
+    tid = data['TID']
+    publisher_Email = data['Publisher']
+    Image_info = data['ImageInfo']
+
+    task = models.Task.objects.filter(TID=tid).first()
+    task_obtained = models.getTask.objects.filter(Task=task).first()
+    destination = {}
+    destination["info"]={"description":task.Description,"version":"1.0","year":2021,"contributor":publisher_Email,"data_created":str(task.CreatedTime)}
+    destination['licenses']={'name':task.Name}
+    destination['images']=[]
+    destination['annotations']=[]
+    for item in Image_info:
+        dict_image = {}
+        dict_annotation = {}
+        image = models.Image.objects.filter(Task=task, id=item['Image']).first()
+        
+        left = item['Left']
+        top = item['Top']
+        width = item['Width']
+        height = item['Height']
+        text = item['Text']
+
+        dict_image['id']=image.id
+        dict_image['url']=img_profix+image.Ipfs_hash
+        dict_annotation['image_id']=image.id
+        dict_annotation['category'] = text
+        dict_annotation['bbox'] = [left, top, width, height]
+
+        export = models.ExportCoCo.objects.create(left=left,top=top,width=width,height=height,text=text)
+        export.Task_obtained.add(task_obtained)
+        export.Image.add(image)
+
+        destination['images'].append(dict_image)
+        destination['annotations'].append(dict_annotation)
+    
+    final=json.dumps(destination,ensure_ascii=False)
+    file_path = json_save+task.Name+".json"
+    fileob = open(file_path,'w',encoding="utf-8")
+    fileob.write(final)
+    fileob.close()
+    jsonfile = models.JsonFile.objects.create(File_path=file_path)
+    jsonfile.Task.add(task)
+    with open(file_path,'rb') as f:
+        responses = HttpResponse(f.read(),content_type="APPLICATION/OCET-STREAM")
+        responses["Content-Disposition"] = 'attachment; filename=export.json'
+        responses["Content-Length"]=os.path.getsize(file_path) 
+    return responses
+    
+    

@@ -114,9 +114,14 @@ function init() {
     canvas.on('mouse:up', options => {
         isDrawing = false;
     })
+
+    console.log("left: ",group.left,group.top, group.item(0).width, group.item(0).height, group.item(1).text)
   
     // 在canvas画布中加入矩形（rect）。add是“添加”的意思
     canvas.add(rect,rect1,text,group)
+    console.log("left: ",rect1.width,group.item(0).top, group.top, text.top, group.item(1).top)
+    // console.log('canvas stringify ', JSON.stringify(canvas))
+    // console.log('canvas toJSON', canvas.toJSON())
 }
 
 function setRect(left, top, width, hright) {
