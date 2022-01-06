@@ -48,53 +48,53 @@
 
  `pip install xxx`
 
-<img src="D:\django\BS_Web\screenshot\1.png" style="zoom:50%;" />
+<img src="screenshot\1.png" style="zoom:50%;" />
 
 
 
-<img src="D:\django\BS_Web\screenshot\2.png" style="zoom:50%;" />
+<img src="screenshot\2.png" style="zoom:50%;" />
 
 ### 2. 功能说明
 
 **（由于是在本地运行前后端，而没有部署到服务器上，故部分页面的渲染会比较慢，请耐心等待）**
 
-![](D:\django\BS_Web\screenshot\3.png)
+![](screenshot\3.png)
 
 #### 2.1 登录、注册与找回密码
 
 本网站的所有操作基本都需要在登录后才能实现，用户应先进行注册和登录，其中邮箱用于后续的验证码发送
 
-![](D:\django\BS_Web\screenshot\5.png)
+![](screenshot\5.png)
 
-![4](D:\django\BS_Web\screenshot\4.png)
+![4](screenshot\4.png)
 
 #### 2.2 上传任务
 
 登录后，用户可以选择多张图片或是视频进行上传，若是上传视频，则会以一定的帧率进行上传，Video和Image文件夹里用于暂时存放用户上传的视频及划分出来的图片（实际已上传到云），也可以作为本网站功能验证的参考
 
-![](D:\django\BS_Web\screenshot\6.png)
+![](screenshot\6.png)
 
 #### 2.3 查看发布任务与领取
 
 查看发布任务界面以**瀑布流**的格式进行设计（此处仅做参考），用户点击领取后可在Your Task页面查看。领取后该任务消失
 
-![](D:\django\BS_Web\screenshot\7.png)
+![](screenshot\7.png)
 
 #### 2.4 个人任务界面
 
 该页面展示了所有你发布的任务和领取的任务，可以导出发布任务中其他用户完成任务的coco格式数据（json文件），也可进入到领取任务的标注界面。此外为撤销发布任务和丢弃领取任务
 
-![](D:\django\BS_Web\screenshot\9.png)
+![](screenshot\9.png)
 
-![8](D:\django\BS_Web\screenshot\8.png)
+![8](screenshot\8.png)
 
 #### 2.5 标注功能
 
 标注页面概览如下
 
-![](D:\django\BS_Web\screenshot\11.png)
+![10](screenshot\10.png)
 
-![10](D:\django\BS_Web\screenshot\10.png)
+![](screenshot\11.png)
 
 
 
@@ -102,21 +102,21 @@
 
 
 
-![](D:\django\BS_Web\screenshot\12.png)
+![](screenshot\12.png)
 
-![13](D:\django\BS_Web\screenshot\13.png)
+![13](screenshot\13.png)
 
-![14](D:\django\BS_Web\screenshot\14.png)
+![14](screenshot\14.png)
 
-![15](D:\django\BS_Web\screenshot\15.png)
+![15](screenshot\15.png)
 
 
 
 json文件如下，可自行采用排版工具进行格式化
 
-![](D:\django\BS_Web\screenshot\16.png)
+![](screenshot\16.png)
 
-![17](D:\django\BS_Web\screenshot\17.png)
+![17](screenshot\17.png)
 
 
 
