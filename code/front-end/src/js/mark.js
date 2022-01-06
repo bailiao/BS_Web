@@ -165,6 +165,7 @@ function init(len) {
     let DrawItem;
 
     $("#ToMark").on("click", function() {
+        currentItem = null;
         isDrawing = true;
         // console.log(isDrawing);
     })
@@ -175,6 +176,13 @@ function init(len) {
             
         }
         isText = false;
+    })
+
+    $("#ToDelete").on("click", function() {
+        if(currentItem) {
+            canvas.remove(currentItem);
+            currentItem = null;
+        }
     })
 
     $("#text_modal").find(".modal-footer").find("button").on("click", function() {
@@ -190,6 +198,7 @@ function init(len) {
         $("#text_modal").modal('hide');
         canvas.remove(currentItem);
         canvas.add(currentItem);
+        currentItem = null;
     });
 
     $("#ToMark").on("click", function() {
@@ -201,9 +210,7 @@ function init(len) {
     })
 
     canvas.on('mouse:down', options => {
-        // console.log("mouse: "+isDrawing);
         if(isDrawing) {
-            // console.log("mouse: "+isDrawing);
             console.log(`x轴坐标: ${options.e.clientX};    y轴坐标: ${options.e.clientY}`)
             isDrag = true;
             startx = `${options.e.clientX}` - canvas_offset_left;
@@ -226,9 +233,6 @@ function init(len) {
     })
 
     canvas.on('mouse:up', options => {
-        // isDrawing = false;
-        // console.log(currentItem);
-        // Array[canvas_index].push(currentItem);
         if(DrawItem) {
             const text = new fabric.Textbox('标注', {
                 top: DrawItem.top,

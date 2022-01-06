@@ -39,7 +39,10 @@ $(function(){
     })
 
     $("#upload_task").on("click", function(){
-        $("#upload_modal").modal();
+        if(checkIdentify())
+            $("#upload_modal").modal();
+        else 
+            alert("请先登录！")
     })
 
     $("#register_link").on("click", function() {

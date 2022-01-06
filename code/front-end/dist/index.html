@@ -5,12 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <!-- <link rel="stylesheet" href="../src/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../src/css/myCss.css">
-    <script src="../src/js/jquery-3.6.0.js"></script>
-    <script src="../src/js/bootstrap.min.js"></script> -->
     <script src="https://unpkg.com/ipfs-api/dist/index.js"></script>
-    <!-- <script src="./index.js" type="module"></script> -->
 <script defer src="js/index.js"></script></head>
 
 <body>
@@ -30,12 +25,6 @@
       
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <form class="navbar-form navbar-left">
-              <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search">
-              </div>
-              <button type="submit" class="btn btn-default">搜索</button>
-            </form>
             <ul class="nav navbar-nav navbar-right">
               <li ><a href="#" id="log_in_out">Login</a></li>
               <li class="dropdown">
@@ -56,7 +45,6 @@
       <button type="button" class="btn btn-default" id="upload_task">上传任务</button>
       <button type="button" class="btn btn-default" id="get_task">领取任务</button>
       <button type="button" class="btn btn-default" id="self">个人主页</button>
-      <button type="button" class="btn btn-default" id="test">测试</button>
 
       <!-- 各种模态框 -->
       <!-- 登录模态框 -->
@@ -139,7 +127,7 @@
                 <div class="form-group">
                   <label for="find_Email">Email address</label>
                   <input type="text" class="form-control" id="find_Email" placeholder="Email" name="Email">
-                  <button>发送验证码</button>
+                  <button id="checkcode">发送验证码</button>
                 </div>
                 <div class="form-group">
                   <label for="Identitycode">Identitycode</label>
@@ -147,7 +135,7 @@
                 </div>
                 <div class="form-group">
                   <label for="find_passwd">Password</label>
-                  <input type="password" class="form-control" id="find_passwd" placeholder="Password" name="Password">
+                  <input type="password" class="form-control" id="find_passwd" placeholder="Password" name="Newpassword">
                 </div>
               </form>
               <div class="link">

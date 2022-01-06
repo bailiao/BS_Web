@@ -72,7 +72,7 @@ $(function() {
 
     /* 进入图片标注（传给TID） */
     $("#obtain_task").on('click', '.btn-mark', function(e){
-        alert("sss")
+        // alert("sss")
         var id = $(e.currentTarget).closest(".col-sm-6").prop("id");
         var str = id.split("_")
         console.log(id);

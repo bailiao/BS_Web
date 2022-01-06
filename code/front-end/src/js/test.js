@@ -1,3 +1,5 @@
+// 标注页面测试用，可忽略
+
 var isDrawing = false;
 $(function(){
     $("button").on("click", function() {
