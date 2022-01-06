@@ -42,14 +42,6 @@ $(function() {
                         <p> Description: "+taskList[index]['Description']+"</p> \
                         <button type='button' class='btn btn-primary'>领取</button> \
                     </article>"
-                // let template = " \
-                //     <article class='white-panel' id="+ index++ +"> \
-                //         <img src="+ipfs_img+img_path+" /> \
-                //         <p> Name: "+"Name"+"</p> \
-                //         <p> Publisher: "+"Publisher"+"</p> \
-                //         <p> Description: "+"Description"+"</p> \
-                //         <button type='button' class='btn btn-primary'>领取</button> \
-                //     </article>"
                 let node = $(template);
                 $("#gallery-wrapper").append(node);
                 $("#gallery-wrapper").trigger("create");
@@ -113,6 +105,12 @@ function getCookie(c_name) {
         }
     }
     return ""//不存在就返回空
+}
+
+function setCookie(c_name, value, expiredays) {
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate + expiredays);
+    document.cookie = c_name + "=" + value + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString()); 
 }
 
 //删除登录用户的cookie

@@ -8,6 +8,7 @@ const server = "http://127.0.0.1:8000";
 const ipfs_img = "http://127.0.0.1:8080/ipfs/"
 var canvas_offset_left;
 var canvas_offset_top;
+var isSave = false;
 var theCanvas;
 var markArray;
 var ImageArray;
@@ -15,7 +16,6 @@ var old_index;
 var curren_Index;
 
 $(function() {
-    // $(".canvas img").hide();
     var TID = getUrlParam("TID");
     var Publisher = getUrlParam("Publisher");
     var Time = getUrlParam("Time")
@@ -40,16 +40,7 @@ $(function() {
                 $(".nav-img").append("<li><a class='display-img' name="+index+" href='#' id="+res['Image'][index]['Path']+">"+res['Image'][index]['Name']+"</a></li>");
                 $(".nav-img").trigger("create");
                 ImageArray[index] = res['Image'][index]['Id'];
-                // let id = "goMark"+index;
-                // $(".canvas_box").append("<canvas width='900' height='500' id="+id+" style='border:1px solid #ccc'></canvas>")
-                // $(".canvas_box").trigger("create");
             }
-
-            // for(var index = 0; index < len; index++) {
-            //     let id = "goMark"+index;
-            //     init(id, ipfs_img + res['Image'][index]['Path']);
-            //     $("#"+id).hide();
-            // }
             markArray = new Array(len);
             theCanvas = init(len);
             
@@ -63,19 +54,15 @@ $(function() {
     /* 导入图片 */
     $(".nav-img").on("click", '.display-img', function(){
         // alert("sss")
-        // $(".canvas img").show();
         let index = $(this).prop("name");
         let img_path = $(this).prop("id");
         console.log("index: "+index+" "+old_index);
         curren_Index = index;
-        // id="goMark"+index;
-        // $("#"+id).show();
         if(old_index)
             markArray[old_index] = theCanvas.getObjects();
         console.log(markArray)
         theCanvas.clear();
         setCanvas(ipfs_img+img_path, theCanvas, index);
-        // $(".canvas img").prop("src", ipfs_img+img_path);
     })
     /* 导入图片 */
 
@@ -95,9 +82,17 @@ $(function() {
     /* 侧边栏 */
 
     /* 保存和导出 */
-    $("#ToExport").on("click", function(){
+    $("#ToSave").on("click", function(){
         markArray[curren_Index] = theCanvas.getObjects();
         toJson(markArray, ImageArray);
+        isSave = true;
+    })
+
+    $("#ToExport").on("click", function(){
+        if(isSave)
+            download(TID);
+        else
+            alert("请先保存");
     })
     /* 保存和导出 */
 
@@ -142,6 +137,12 @@ function getCookie(c_name) {
         }
     }
     return ""//不存在就返回空
+}
+
+function setCookie(c_name, value, expiredays) {
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate + expiredays);
+    document.cookie = c_name + "=" + value + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString()); 
 }
 
 //删除登录用户的cookie
@@ -306,7 +307,6 @@ function setCanvas(image_path, canvas, index) {
 }
 
 function toJson(Array, Image_Array){
-    // canvas.clear()
     console.log(Image_Array);
     let data={}
     let len1, len2;
@@ -318,9 +318,6 @@ function toJson(Array, Image_Array){
         if(Array[j]) len2 = Array[j].length;
         else len2 = 0;
         for(var i = 0; i < len2; i++) {
-            // console.log(getUrlParam("TID"),Image_Array[j], Array[j][i].left, Array[j][i].top, Array[j][i].item(0).width,Array[j][i].item(0).height,Array[j][i].item(1).text);
-            // canvas.add(Array[index][i]);
-            // console.log(len1,len2);
             dict={}
             dict['Image'] = ImageArray[j];
             dict['Left'] = Array[j][i].left;
@@ -329,7 +326,6 @@ function toJson(Array, Image_Array){
             dict['Height'] = Array[j][i].item(0).height;
             dict['Text'] = Array[j][i].item(1).text;
             data['ImageInfo'].push(dict);
-            // console.log("dict ",dict)
         }
     }
     console.log("data: ",data)
@@ -337,9 +333,14 @@ function toJson(Array, Image_Array){
         type:'post',
         url:`${server}/saveInfo/`,
         data:JSON.stringify(data),
+        success:function(res) {
+            alert(res);
+        }
     })
-    
-    // console.log('Array stringify ', JSON.stringify(Array[index]))
-    // console.log('canvas stringify ', JSON.stringify(canvas))
-    // console.log('canvas toJSON', canvas.toJSON())
+}
+
+function download(task) {
+    var form = $('<form action="' + `${server}/downloadExport/` + '" method="post"><input type="text" name="TID" value='+task+'></form>');
+    $('body').append(form);
+    form.submit(); //自动提交
 }

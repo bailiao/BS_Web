@@ -107,12 +107,14 @@ $(function(){
         });
     })
 
-    $("#findpasswd_modal").find(".form-group").find("button").on("click", function(){
+    $("#checkcode").on("click", function(){
         let data = {};
-        data['Email'] = getCookie("UID");
+        alert("sss")
+        data['Email'] = $("#find_Email").val();
+        console.log(data);
         console.log(JSON.stringify(data));
-        $.post(`${server}/findPassword/`, JSON.stringify(data), function(res) {
-            $("#login_modal").modal('hide');
+        $.post(`${server}/findpasswd/`, JSON.stringify(data), function(res) {
+            console.log(res);
             if(res === "验证码已发送，请查收邮件") {
                 alert("验证码已发送，请查收邮件");
             }else {

@@ -240,10 +240,17 @@ def saveInfo(request):
     fileob.close()
     jsonfile = models.JsonFile.objects.create(File_path=file_path)
     jsonfile.Task.add(task)
-    with open(file_path,'rb') as f:
+    return HttpResponse("保存成功")
+
+def downloadExport(request):
+    tid = request.POST.get('TID');
+    task = models.Task.objects.filter(TID=tid).first()
+    file = models.JsonFile.objects.values().filter(Task=task).first()
+ 
+    with open(file['File_path'],'rb') as f:
         responses = HttpResponse(f.read(),content_type="APPLICATION/OCET-STREAM")
         responses["Content-Disposition"] = 'attachment; filename=export.json'
-        responses["Content-Length"]=os.path.getsize(file_path) 
+        responses["Content-Length"]=os.path.getsize(file['File_path']) 
     return responses
     
     

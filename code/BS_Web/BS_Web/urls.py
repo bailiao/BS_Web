@@ -33,4 +33,5 @@ urlpatterns = [
     path('discardTask/',task_view.discardTask),
     path('getOneTask/',task_view.getOneTask),
     path('saveInfo/',task_view.saveInfo),
+    path('downloadExport/',task_view.downloadExport),
 ]

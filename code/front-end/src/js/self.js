@@ -38,18 +38,6 @@ $(function() {
                             </div> \
                         </div> \
                     </div> "
-                // let template = " \
-                // <div class='col-sm-6 col-md-4' > \
-                //     <div class='thumbnail' >\
-                //     <img src="+ipfs_img+Task['Ipfs_hash']+" /> \
-                //         <div class='caption'> \
-                //             <h3> Name </h3> \
-                //             <p> abaaba </p> \
-                //             <p> Sate: </p> \
-                //             <p> CreatedTime: </p> \
-                //         </div> \
-                //     </div> \
-                // </div> "
                 let node = $(template);
                 $("#publish_task").append(node);
                 $("#publish_task").trigger("create");
@@ -139,7 +127,11 @@ $(function() {
     /* 丢弃或撤销任务 */
 
     /* 导出任务 */
-
+    $("#publish_task").on('click', '.btn-out', function(e){
+        var tid = $(e.currentTarget).closest(".col-sm-6").prop("id");
+        alert("sss");
+        download(tid);
+    })
     /* 导出任务 */
 
     /* 窗口切换 */
@@ -174,9 +166,21 @@ function getCookie(c_name) {
     return ""//不存在就返回空
 }
 
+function setCookie(c_name, value, expiredays) {
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate + expiredays);
+    document.cookie = c_name + "=" + value + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString()); 
+}
+
 //删除登录用户的cookie
 function clearCookie(name) { 
 
     setCookie(name, "", -1); 
 
 } 
+
+function download(task) {
+    var form = $('<form action="' + `${server}/downloadExport/` + '" method="post"><input type="text" name="TID" value='+task+'></form>');
+    $('body').append(form);
+    form.submit(); //自动提交
+}
